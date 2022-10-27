@@ -1,32 +1,89 @@
-# Prerequisites
-*.d
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+int main() {
+	double count = 0;
+	double topsgift = 0;
+	double times = 0;
+	int twpAve = 0;
+	srand(time(nullptr));
+	cin >> count;
+	times = count;
+	while (count--) {
+		int num = 20;
+		string people[21] = { "John", "Joyce", "小明", "小白", "小黑", "大黑", "大白",
+		"小豬", "小羊","大樹","張三","李四","老五","阿勇","玫瑰" ,"小王" , "曉華" , "小新"
+		,"小丑" , "大黃" };
+		double gift[21] = { 0.5, 0.7, 0.6, 0.5, 0.6, 0.6, 0.7, 0.7, 0.8, 0.7, 0.4, 0.4, 0.5, 0.3, 0.6 , 0.5 , 0.5, 0.7 ,0.8 ,0.9 };
+		//  / 0.3 *1 / 0.4 *2 / 0.5 *5 / 0.6 * 4 / 0.7 *5 / 0.8 *2 / 0.9 *1
+		double money[21] = { 0 };
+		int N = 480;	//40年*12月 1個月結算一次
 
-# Precompiled Headers
-*.gch
-*.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+		for (int i = 0; i < num; i++) {
+			money[i] = 100;
+		}
+		for (int i = 0; i < N; i++) {
+			int rn = rand();
+			if (rn % 2 == 0) {
+				if (((rand() % 10) * (1 + gift[i % num])) > 4) {
+					money[i % num] = money[i % num] * 2;
+				}
+				else {
+					money[i % num] = money[i % num] + 20;
+				}
+			}
+			else if (rn % 3 == 0) {
+				money[i % num] = money[i % num] / 2;
+			}
+			else {
+				money[i % num] = money[i % num] + 20;
+			}
 
-# Fortran module files
-*.mod
-*.smod
+		}
+		for (int i = 0; i < num; i++) {
+			for (int j = 0; j < num; j++) {
+				double temp = 0;
+				string Ntemp = "";
+				if (money[j] < money[j + 1]) {
+					temp = money[j];
+					money[j] = money[j + 1];
+					money[j + 1] = temp;
+					temp = gift[j];
+					gift[j] = gift[j + 1];
+					gift[j + 1] = temp;
+					Ntemp = people[j];
+					people[j] = people[j + 1];
+					people[j + 1] = Ntemp;
+				}
+			}
+		}
+		int total = 0;
+		for (int i = 0; i < num; i++) {
+			total += money[i];
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+		}
+		cout << "Name\t" << "gift\t" << "money\t\t" << "percentage" << endl;
+		for (int i = 0; i < num; i++) {
+			double per = (money[i] / total) * 100;
+			cout << people[i] << "\t" << gift[i] << "\t" << money[i] << "\t\t" << per << "%" << endl;
+		}
+		int twp = 0;
+		for (int i = 0; i < num * 0.2; i++) {
+			twp += (money[i] / total) * 100;
 
-# Executables
-*.exe
-*.out
-*.app
+		}
+		twpAve += twp;
+		cout << "total:\t" << total << "\t前20%的錢:" << twp << "%" << "\t後80%的錢:" << 100 - twp << "%" << endl;
+		topsgift = topsgift + gift[0];
+
+	}
+	cout << "\n平均錢最多的人的天賦值:" << topsgift / times << "\t平均前20%的錢:" << twpAve/ times << "%" 
+		<< "\t平均後80%的錢:" << 100 - (twpAve / times) << "%"<< endl;
+
+
+	return 0;
+}
